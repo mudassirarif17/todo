@@ -19,7 +19,7 @@
         <div class="my-2">
             <textarea id="desc" placeholder="Description" class="form-control" name="" id="" cols="30" rows="3"></textarea>
         </div>
-        <button onclick="addtodo()" class="btn btn-primary">ADD TODO</button>
+        <button id="addtodo" onclick="addtodo()" class="btn btn-primary">ADD TODO</button>
 
         <div>
             <h1>Your Todo's</h1>
@@ -51,6 +51,7 @@
 
     <script>
         var todo = [];
+        var display = true;
 
         function addtodo(){
             var title = document.getElementById("title").value;
@@ -80,7 +81,7 @@
                         <td>${index+1}</td>
                         <td>${data.title}</td>
                         <td>${data.desc}</td>
-                        <td><button onclick="edit(${index})" class="btn-sm btn-primary me-1">Edit</button><button onclick="deleted(${index})" class="btn-sm btn-primary ">Delete</button><button style="display: none;" id="save" onclick="save(${index})" class="btn-primary btn-sm  me-1 ">Save</button></td>
+                        <td><button onclick="edit(${index})" class="edit btn-sm btn-primary me-1">Edit</button><button onclick="deleted(${index})" class="btn-sm btn-primary me-1">Delete</button><button onclick="save(${index})" class="save btn-primary btn-sm  me-1" style="display: none;">Save</button></td>
                     </tr>
                     `
                     
@@ -113,22 +114,26 @@
             todo = JSON.parse(localStorage.getItem("todos"));
             utitle = document.getElementById("title").value = todo[id].title;
             udesc = document.getElementById("desc").value = todo[id].desc;
-            document.getElementById("save").style.display = "inline";
+            document.getElementById("addtodo").style.display = "none";
+            document.getElementsByClassName("edit")[id].style.display = "none";
+            document.getElementsByClassName("save")[id].style.display = "inline";
         }
-
+        
         function save(id){
             todo = JSON.parse(localStorage.getItem("todos"));
             utitle = document.getElementById("title").value;
             udesc = document.getElementById("desc").value;
-
+            
             document.getElementById("title").value = "";
             document.getElementById("desc").value = "";
-
+            
             todo[id].title = utitle;
             todo[id].desc = udesc;
             var todoData = JSON.stringify(todo);
             localStorage.setItem("todos" , todoData);
-            document.getElementById("save").style.display = "none";
+            document.getElementById("addtodo").style.display = "block";
+            document.getElementsByClassName("edit")[id].style.display = "inline";
+            document.getElementsByClassName("save")[id].style.display = "none";
             updateTodo();
         }
     </script>
