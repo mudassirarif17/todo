@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>TODO</title>
+  </head>
+  <body>
+    <div class="container my-5">
+        <h1 class="text-center">TODO List</h1>
+        <div>
+            <input placeholder="Title" type="text" name="title" id="title" class="form-control">
+        </div>
+        <div class="my-2">
+            <textarea id="desc" placeholder="Description" class="form-control" name="" id="" cols="30" rows="3"></textarea>
+        </div>
+        <button onclick="addtodo()" class="btn btn-primary">ADD TODO</button>
+
+        <div>
+            <h1>Your Todo's</h1>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sno</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- <tr>
+                        <td>1</td>
+                        <td>Shoping</td>
+                        <td>Bhai ki Shadi</td>
+                        <td><button onclick="edit()" class="btn-sm btn-primary mx-1">Edit</button><button onclick="deleted()" class="btn-sm btn-primary ">Delete</button></td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script>
+        var todo = [];
+
+        function addtodo(){
+            var title = document.getElementById("title").value;
+            var desc = document.getElementById("desc").value;
+
+            todo.push({title : title , desc : desc});
+
+            title = document.getElementById("title").value = "";
+            desc = document.getElementById("desc").value = "";
+
+            var todoData = JSON.stringify(todo);
+            localStorage.setItem("todos" , todoData);
+
+            updateTodo();
+        }
+
+        function updateTodo(){
+            todo = JSON.parse(localStorage.getItem("todos"));
+            var str = "";
+            if(todo == null){
+                todo = []
+            }
+            todo.map((data , index)=>{
+                return (
+                    str += `
+                    <tr>
+                        <td>${index+1}</td>
+                        <td>${data.title}</td>
+                        <td>${data.desc}</td>
+                        <td><button onclick="edit(${index})" class="btn-sm btn-primary me-1">Edit</button><button onclick="deleted(${index})" class="btn-sm btn-primary ">Delete</button><button style="display: none;" id="save" onclick="save(${index})" class="btn-primary btn-sm  me-1 ">Save</button></td>
+                    </tr>
+                    `
+                    
+                )
+                
+            })
+            document.getElementById("tbody").innerHTML = str; 
+            
+        }
+
+        updateTodo();
+
+        
+
+        function deleted(id){
+            todo = JSON.parse(localStorage.getItem("todos"));
+            todo.splice(id , 1);
+            var todoData = JSON.stringify(todo);
+            localStorage.setItem("todos" , todoData);
+            updateTodo();
+        }
+
+        var utitle = "";
+        var udesc = "";
+
+        
+
+        function edit(id){
+            //console.log(id);
+            todo = JSON.parse(localStorage.getItem("todos"));
+            utitle = document.getElementById("title").value = todo[id].title;
+            udesc = document.getElementById("desc").value = todo[id].desc;
+            document.getElementById("save").style.display = "inline";
+        }
+
+        function save(id){
+            todo = JSON.parse(localStorage.getItem("todos"));
+            utitle = document.getElementById("title").value;
+            udesc = document.getElementById("desc").value;
+
+            document.getElementById("title").value = "";
+            document.getElementById("desc").value = "";
+
+            todo[id].title = utitle;
+            todo[id].desc = udesc;
+            var todoData = JSON.stringify(todo);
+            localStorage.setItem("todos" , todoData);
+            document.getElementById("save").style.display = "none";
+            updateTodo();
+        }
+    </script>
+
+    
+  </body>
+</html>
