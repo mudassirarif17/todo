@@ -54,6 +54,7 @@
         var display = true;
 
         function addtodo(){
+            if(document.getElementById("title").value != "" && document.getElementById("desc").value ){
             var title = document.getElementById("title").value;
             var desc = document.getElementById("desc").value;
 
@@ -66,6 +67,11 @@
             localStorage.setItem("todos" , todoData);
 
             updateTodo();
+            }
+            else{
+                alert("Please Enter a valid Title And Description")
+            }
+            
         }
 
         function updateTodo(){
@@ -81,7 +87,7 @@
                         <td>${index+1}</td>
                         <td>${data.title}</td>
                         <td>${data.desc}</td>
-                        <td><button onclick="edit(${index})" class="edit btn-sm btn-primary me-1">Edit</button><button onclick="deleted(${index})" class="btn-sm btn-primary me-1">Delete</button><button onclick="save(${index})" class="save btn-primary btn-sm  me-1" style="display: none;">Save</button></td>
+                        <td><button onclick="edit(${index})" class="edit btn-sm btn-primary me-1">Edit</button><button onclick="deleted(${index})" class="btn-sm btn-primary me- delete">Delete</button><button onclick="save(${index})" class="save btn-primary btn-sm  me-1" style="display: none;">Save</button></td>
                     </tr>
                     `
                     
@@ -97,11 +103,17 @@
         
 
         function deleted(id){
+            if(document.getElementById("addtodo").style.display == "none"){
+                alert("You can not delete this because You are in editing mode")
+            }
+            else{
             todo = JSON.parse(localStorage.getItem("todos"));
             todo.splice(id , 1);
             var todoData = JSON.stringify(todo);
             localStorage.setItem("todos" , todoData);
             updateTodo();
+            }
+            
         }
 
         var utitle = "";
@@ -110,13 +122,18 @@
         
 
         function edit(id){
-            //console.log(id);
+            if(document.getElementById("addtodo").style.display == "none"){
+                alert("You can not Edit this because You are in editing mode")
+            }
+            else{
             todo = JSON.parse(localStorage.getItem("todos"));
             utitle = document.getElementById("title").value = todo[id].title;
             udesc = document.getElementById("desc").value = todo[id].desc;
             document.getElementById("addtodo").style.display = "none";
             document.getElementsByClassName("edit")[id].style.display = "none";
             document.getElementsByClassName("save")[id].style.display = "inline";
+            document.getElementsByClassName("delete")[id].style.display = "none";
+            }
         }
         
         function save(id){
@@ -134,6 +151,7 @@
             document.getElementById("addtodo").style.display = "block";
             document.getElementsByClassName("edit")[id].style.display = "inline";
             document.getElementsByClassName("save")[id].style.display = "none";
+            document.getElementsByClassName("delete")[id].style.display = "inline";
             updateTodo();
         }
     </script>
